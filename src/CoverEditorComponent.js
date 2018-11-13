@@ -10,6 +10,7 @@ import 'rc-slider/assets/index.css';
 import './CoverEditorComponent.css';
 
 const imgPath = process.env.PUBLIC_URL + '/assets/';
+const defaultSliderValue = 50
 
 const modalStyles = {
   content : {
@@ -76,6 +77,7 @@ class App extends Component {
     super();
     this.state = {
       activeDrags: 0,
+      sliderValue: defaultSliderValue,
       draggablePostion: {
         x: 0, y: 100
       },
@@ -96,6 +98,8 @@ class App extends Component {
     let file          = document.querySelector('input[type=file]').files[0];
     let resizeReader  = new FileReader();
 
+    this.setState({ sliderValue: defaultSliderValue })
+
     if (!file) {
       return
     } else if (!(file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif')) {
@@ -112,7 +116,7 @@ class App extends Component {
 
             /* Resize */
             let canvas = document.createElement('canvas'),
-                max_size = 256,
+                max_size = 1024,
                 width = image.width,
                 height = image.height;
             if (width > height) {
@@ -154,10 +158,10 @@ class App extends Component {
               ctx.drawImage(image, -oriWidth/2, -oriHeight/2, oriWidth, oriHeight);
               ctx.restore();
 
-            /* Update img src with data url */
-            let imgDataUrl = canvas.toDataURL('image/jpeg');
-            document.getElementById('user-img').setAttribute('src', imgDataUrl);
-            //document.getElementById('user-img-modal').setAttribute('src', imgDataUrl);
+              /* Update img src with data url */
+              let imgDataUrl = canvas.toDataURL('image/jpeg');
+              document.getElementById('user-img').setAttribute('src', imgDataUrl);
+              //document.getElementById('user-img-modal').setAttribute('src', imgDataUrl);
 
 
             })
@@ -200,6 +204,8 @@ class App extends Component {
 
     $('.user-img').css( "maxWidth", userImgSize.w + userImgSize.w*(number - 50)/100.0 + "px" )
     $('.user-img').css( "maxHeight", userImgSize.h + userImgSize.h*(number - 50)/100.0 + "px" )
+
+    this.setState({ sliderValue: number })
   }
 
   onModalResize = (number) => {
@@ -276,7 +282,7 @@ class App extends Component {
 
   render() {
     const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
-    const { draggablePostion, modalIsOpen } = this.state
+    const { draggablePostion, modalIsOpen, sliderValue } = this.state
 
     return (
       <div className="cover-editor">
@@ -290,7 +296,7 @@ class App extends Component {
           <img
               className="cover-img"
               draggable="false"
-              src={`${imgPath}object/2.png`}
+              src={`${imgPath}object/1.png`}
               alt={'img'}/>
           <div className="drag-area">
             <Draggable
@@ -312,31 +318,22 @@ class App extends Component {
           </div>
         </div>
         <div className="slider">
-          <Slider min={0} max={100} defaultValue={50} onChange={this.onResize}/>
+          <Slider min={0} max={100} defaultValue={50} value={sliderValue} onChange={this.onResize}/>
           <div className="slider-minus">-</div>
           <div className="slider-plus">+</div>
         </div>
-        <div className="download">
-          <div className="download-button" onClick={this.download}>下載照片</div>
-        </div>
-        <div className="share">
-          <div className="share-button">
-            <FacebookShareButton
-              url={'https://wuo-wuo.com/'}
-              quote={'分享到臉書'}>
-              分享到臉書
-              <FacebookIcon
-                size={0}
-                round />
-            </FacebookShareButton>
+        <div className="actions">
+          <div className="visit">
+            <a
+              target='_blank'
+              rel='noopener noreferrer'
+              href={'https://wuo-wuo.com/nest-holding-newspaper/each-period-of-nest-reported/800-wo-bao-bao-vol-14-quot-cat-is-hungry-quot-cat-diet-special-issue.html'} className="visit-button"></a>
+          </div>
+          <div className="download">
+            <div className="download-button" onClick={this.download}></div>
           </div>
         </div>
-        <div className="visit">
-          <a
-            target='_blank'
-            rel='noopener noreferrer'
-            href={'https://wuo-wuo.com/nest-holding-newspaper/each-period-of-nest-reported/800-wo-bao-bao-vol-14-quot-cat-is-hungry-quot-cat-diet-special-issue.html'} className="visit-button">看這期窩抱報</a>
-        </div>
+
         <Modal
           isOpen={modalIsOpen}
           onAfterOpen={null}

@@ -1,12 +1,41 @@
 .app {
   text-align: center;
-  background-image: url("/images/background.png");
+  background-color: #DD797A;
+  background-position: 50% 160px;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 800px 800px;
   min-height: 100vh;
 
   display: flex;
   flex-direction: column;
+}
+
+.app-logo {
+    background-image: url("/images/logo.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-size: 70px 25px;
+    width: 70px;
+    height: 25px;
+    margin: 30px auto 5px auto;
+}
+
+.app-title {
+  margin: 30px auto;
+}
+
+.app-main-title {
+    width: 90%;
+    max-width: 400px;
+    max-height: 133px;
+    margin: 15px auto 0px auto;
+}
+
+.app-sub-title {
+    width: calc(90% - 50px);
+    max-width: 340px;
+    max-height: 57px;
+    top: -50%;
 }
 
 .hide {
